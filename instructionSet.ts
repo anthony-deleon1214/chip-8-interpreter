@@ -116,14 +116,14 @@ const instructions = [
     {
         id: SUB_VY_VX,
         name: SUB_VY_VX,
-        description: 'Subtract VY from VX, set VF to 01 if borrow occurs, 00 otherwise',
+        description: 'Subtract VY from VX, set VF to 00 if borrow occurs, 01 otherwise',
         mask: 0xF00F,
         pattern: 0x8005,
         arguments: [{ mask: 0x0F00, shift: 8, type: 'R' }, { mask: 0x00F0, shift: 4, type: 'R' }],
     },
     {
         id: SHR_VY_VX,
-        name: SHR_VY_VX,
+        name: SHR,
         description: 'Store value in VY shifted right one bit in VX, VY is unchanged, set VF to LSB prior to shift',
         mask: 0xF00F,
         pattern: 0x8006,
@@ -132,9 +132,44 @@ const instructions = [
     {
         id: SUBX_VX_VY,
         name: SUBX,
-        description: 'Set VX to the value of VY minus VX, set VF to 00 if borrow occurs',
+        description: 'Set VX to the value of VY minus VX, set VF to 00 if borrow occurs, 01 otherwise',
         mask: 0xF00F,
         pattern: 0x8007,
         arguments: [{ mask: 0x0F00, shift: 8, type: 'R' }, { mask: 0x00F0, shift: 4, type: 'R' }],
     },
+    {
+        id: SHL_VY_VX,
+        name: SHL,
+        description: 'Store value in VY shifted left one bit in VX, VY is unchanged, set VF equal to MSB prior to shift',
+        mask: 0xF00F,
+        pattern: 0x800E,
+        arguments: [{ mask: 0x0F00, shift: 8, type: 'R' }, { mask: 0x00F0, shift: 4, type: 'R' }],
+    },
+    {
+        id: SNE_VX_VY,
+        name: SNE,
+        description: 'Skip next instruction if VX is not equal to VY',
+        mask: 0xF00F,
+        pattern: 0x9000,
+        arguments: [{ mask: 0x0F00, shift: 8, type: 'R' }, { mask: 0x00F0, shift: 4, type: 'R' }],
+    },
+    {
+        id: STO_NNN_I,
+        name: STO,
+        description: 'Store memory address NNN in register I',
+        mask: 0xF000,
+        pattern: 0xA000,
+        arguments: [{ mask: 0x0FFF, shift: 0, type: 'NNN' }],
+    },
+    {
+        id: JMP_V0,
+        name: JMP,
+        description: 'Jump to memory address NNN + V0',
+        mask: 0xF000,
+        pattern: 0xB000,
+        arguments: [{ mask: 0x0FFF, shift: 0, type: 'NNN'}],
+    },
+    {
+        
+    }
 ]

@@ -130,6 +130,11 @@ const instructions = [
         arguments: [{ mask: 0x0F00, shift: 8, type: 'R' }, { mask: 0x00F0, shift: 4, type: 'R' }],
     },
     {
-        
-    }
+        id: SUBX_VX_VY,
+        name: SUBX,
+        description: 'Set VX to the value of VY minus VX, set VF to 00 if borrow occurs',
+        mask: 0xF00F,
+        pattern: 0x8007,
+        arguments: [{ mask: 0x0F00, shift: 8, type: 'R' }, { mask: 0x00F0, shift: 4, type: 'R' }],
+    },
 ]

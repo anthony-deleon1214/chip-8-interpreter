@@ -1,6 +1,6 @@
 // Array of opcode objects
 // Types: 'A' = 'Address', 'R' = 'Register', 'NN' = 'Hex byte', 
-const instructions = [
+const INSTRUCTION_SET = [
     {
         id: 'CLR',
         name: 'CLR',
@@ -274,3 +274,5 @@ const instructions = [
         arguments: [{ mask: 0x0F00, shift: 8, type: 'R' }],
     },
 ];
+
+export default INSTRUCTION_SET;

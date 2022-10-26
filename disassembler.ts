@@ -11,4 +11,6 @@ function disassemble(opcode) {
 
     // Return instruction and args as an object
     return { instruction, args }
-}
+};
+
+export default disassemble;

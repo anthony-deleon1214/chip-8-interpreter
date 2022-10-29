@@ -93,8 +93,32 @@ class CPU {
             };
                 break;
             case 'VX_OR_VY': {
+                const result = (this.registers[args[0]] | this.registers[args[1]]);
+                this.registers.set([result], args[0]);
             };
                 break;
+            case 'VX_AND_VY': {
+                const result = (this.registers[args[0]] | this.registers[args[1]]);
+                this.registers.set([result], this.registers[args[0]]);
+            };
+                break;
+            case 'VX_XOR_VY': {
+                const result = (this.registers[args[0]] ^ this.registers[args[1]]);
+                this.registers.set([result], this.registers[args[0]]);
+            };
+                break;
+            case 'ADD_VY_VX': {
+                this.registers.set([(this.registers[args[0]] + this.registers[args[1]])], this.registers[args[0]]);
+            };
+                break;
+            case 'SUB_VY_VX': {
+                this.registers.set([(this.registers[args[0]] - this.registers[args[1]])], this.registers[args[0]]);
+            };
+                break;
+            case 'SHR_VY_VX': {
+                const lsbMask = 0x01;
+                const LSB = this.registers[args[1]] & lsbMask;
+            }
         }
     };
 }

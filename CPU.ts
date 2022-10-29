@@ -56,24 +56,44 @@ class CPU {
                 break;
             case 'CALL_ADDR':
                 break;
-            case 'SE_VX_NN':
+            case 'SE_VX_NN': {
+                if (this.registers[args[0]] === args[1]) {
+                    this.PC++;
+                };
                 break;
-            case 'SNE_VX_NN':
+            };
+            case 'SNE_VX_NN': {
+                if (this.registers[args[0]] !== args[1]) {
+                    this.PC++;
+                };
+            };
                 break;
-            case 'SE_VX_VY':
+            case 'SE_VX_VY': {
+                if (this.registers[args[0]] === this.registers[args[1]]) {
+                    this.PC++;
+                };
+            };
                 break;
             case 'STO_NN_VX': {
                 const targetRegister = args[0];
                 const targetValue = args[1];
                 this.registers.set(targetValue, targetRegister);
+            };
                 break;
-            }
             case 'ADD_NN_VX': {
-                const targetRegister = args[0]
-                const targetValue = args[1]
+                const targetRegister = args[0];
+                const targetValue = args[1];
+                this.registers.set((targetValue + this.registers[targetRegister], targetRegister));
+            };
                 break;
-            }
-            case 'STO_VY_VX':
+            case 'STO_VY_VX': {
+                const vxRegister = args[0];
+                const vyRegisterValue = this.registers[args[1]];
+                this.registers.set([vyRegisterValue], vxRegister);
+            };
+                break;
+            case 'VX_OR_VY': {
+            };
                 break;
         }
     };

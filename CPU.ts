@@ -53,8 +53,6 @@ class CPU {
             case 'RET':
                 break;
             case 'JP_ADDR':
-                const lastStackIndex = this.stack.f
-                this.stack.set([this.PC])
                 break;
             case 'CALL_ADDR':
                 break;
@@ -63,6 +61,19 @@ class CPU {
             case 'SNE_VX_NN':
                 break;
             case 'SE_VX_VY':
+                break;
+            case 'STO_NN_VX': {
+                const targetRegister = args[0];
+                const targetValue = args[1];
+                this.registers.set(targetValue, targetRegister);
+                break;
+            }
+            case 'ADD_NN_VX': {
+                const targetRegister = args[0]
+                const targetValue = args[1]
+                break;
+            }
+            case 'STO_VY_VX':
                 break;
         }
     };

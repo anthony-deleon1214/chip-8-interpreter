@@ -118,6 +118,12 @@ class CPU {
             case 'SHR_VY_VX': {
                 const lsbMask = 0x01;
                 const LSB = this.registers[args[1]] & lsbMask;
+                this.registers.set([LSB], 0xF);
+                this.registers.set([this.registers[args[1]] >> 1], this.registers[args[0]]);
+            };
+                break;
+            case 'SUBX-VX_VY': {
+                
             }
         }
     };

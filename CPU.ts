@@ -66,65 +66,129 @@ class CPU {
                 if (this.registers[args[0]] !== args[1]) {
                     this.PC++;
                 };
-            };
                 break;
+            };
             case 'SE_VX_VY': {
                 if (this.registers[args[0]] === this.registers[args[1]]) {
                     this.PC++;
                 };
-            };
                 break;
+            };
             case 'STO_NN_VX': {
                 const targetRegister = args[0];
                 const targetValue = args[1];
                 this.registers.set(targetValue, targetRegister);
-            };
                 break;
+            };
             case 'ADD_NN_VX': {
                 const targetRegister = args[0];
                 const targetValue = args[1];
                 this.registers.set((targetValue + this.registers[targetRegister], targetRegister));
-            };
                 break;
+            };
             case 'STO_VY_VX': {
                 const vxRegister = args[0];
                 const vyRegisterValue = this.registers[args[1]];
                 this.registers.set([vyRegisterValue], vxRegister);
-            };
                 break;
+            };
             case 'VX_OR_VY': {
                 const result = (this.registers[args[0]] | this.registers[args[1]]);
                 this.registers.set([result], args[0]);
-            };
                 break;
+            }; 
             case 'VX_AND_VY': {
                 const result = (this.registers[args[0]] | this.registers[args[1]]);
                 this.registers.set([result], this.registers[args[0]]);
-            };
                 break;
+            };    
             case 'VX_XOR_VY': {
                 const result = (this.registers[args[0]] ^ this.registers[args[1]]);
                 this.registers.set([result], this.registers[args[0]]);
-            };
                 break;
+            };
             case 'ADD_VY_VX': {
                 this.registers.set([(this.registers[args[0]] + this.registers[args[1]])], this.registers[args[0]]);
-            };
                 break;
+            };
             case 'SUB_VY_VX': {
                 this.registers.set([(this.registers[args[0]] - this.registers[args[1]])], this.registers[args[0]]);
-            };
                 break;
+            };
             case 'SHR_VY_VX': {
                 const lsbMask = 0x01;
                 const LSB = this.registers[args[1]] & lsbMask;
                 this.registers.set([LSB], 0xF);
                 this.registers.set([this.registers[args[1]] >> 1], this.registers[args[0]]);
+                break;
+            };
+            case 'SUBX-VX_VY': {
+                const VX = this.registers[args[0]];
+                const VY = this.registers[args[1]];
+                let newVX = VY-VX
+                // Need to figure out checking for borrow
+                break;
+            };
+            case 'SHL_VY_VX': {
+                const msbMask = 0x8000;
+                const MSB = this.registers[args[1]] & msbMask;
+                this.registers.set([MSB], 0xF);
+                this.registers.set([this.registers[args[1]] << 1], this.registers[args[0]]);
             };
                 break;
-            case 'SUBX-VX_VY': {
-                
-            }
+            case 'SNE_VX_VY': {
+                const vxRegister = this.registers[args[0]];
+                const vyRegister = this.registers[args[1]];
+                if (vxRegister !== vyRegister) {
+                    this.PC++
+                };
+                break;
+            };
+            case 'STO_NNN_I': {
+                this.I = args[0];
+            };
+            case 'JMP_V0': {
+                this.PC = (this.registers[0] + args[0]);
+            };
+            case 'RND_VX_NN': {
+                break;
+            };
+            case 'DRW_VX_VY_N': {
+                break;
+            };
+            case 'SKP_VX': {
+                break;
+            };
+            case 'SKNP_VX': {
+                break;
+            };
+            case 'STO_VX_DT': {
+                break;
+            };
+            case 'WAIT': {
+                break;
+            };
+            case 'SET_DT_VX': {
+                break;
+            };
+            case 'SET_ST_VX': {
+                break;
+            };
+            case 'ADD_VX_I': {
+                break;
+            };
+            case 'SET_I_VX': {
+                break;
+            };
+            case 'STO_VX_I': {
+                break;
+            };
+            case 'LD_REG': {
+                break;
+            };
+            case 'LD_MEM': {
+                break;
+            };
         }
     };
 }

@@ -163,18 +163,22 @@ class CPU {
                 break;
             };
             case 'STO_VX_DT': {
+                this.registers.set([this.DT], args[0]);
                 break;
             };
             case 'WAIT': {
                 break;
             };
             case 'SET_DT_VX': {
+                this.DT = this.registers[args[0]];
                 break;
             };
             case 'SET_ST_VX': {
+                this.ST = this.registers[args[0]];
                 break;
             };
             case 'ADD_VX_I': {
+                this.I = (this.I + this.registers[args[0]]);
                 break;
             };
             case 'SET_I_VX': {
@@ -184,6 +188,7 @@ class CPU {
                 break;
             };
             case 'LD_REG': {
+                
                 break;
             };
             case 'LD_MEM': {

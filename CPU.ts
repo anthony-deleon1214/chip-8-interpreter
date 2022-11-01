@@ -50,12 +50,22 @@ class CPU {
         switch(id) {
             case 'CLR':
                 break;
-            case 'RET':
+            case 'RET': {
+                this.PC = this.stack[this.SP];
+                this.SP++;
                 break;
-            case 'JP_ADDR':
+            };
+            case 'JP_ADDR': {
+                this.stack.set([this.PC], this.SP);
+                this.SP--;
+                this.PC = args[0];
                 break;
-            case 'CALL_ADDR':
+            };
+            case 'CALL_ADDR': {
+                this.stack.set([this.PC], this.SP);
+                // Add execute call
                 break;
+            };
             case 'SE_VX_NN': {
                 if (this.registers[args[0]] === args[1]) {
                     this.PC++;
@@ -196,4 +206,6 @@ class CPU {
             };
         }
     };
-}
+};
+
+export default CPU;

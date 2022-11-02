@@ -18,7 +18,7 @@ class CPU {
         this.memory = new Uint8Array(4096);
         this.registers = new Uint8Array(16);
         this.stack = new Uint16Array(16);
-        this.SP = -1;       // Stack pointer (index in stack array)
+        this.SP = 0;       // Stack pointer (index in stack array)
         this.PC = 0x200;    // Program counter (instruction pointer)
         this.I = 0;         // Index register
         this.DT = 0;        // Delay timer
@@ -44,26 +44,29 @@ class CPU {
         return disassemble(opcode);
     };
 
-    _execute(instruction) {
+    _execute(decodedInstruction) {
         // Destructure the object into id and arguments
-        const { id, args } = instruction;
-        switch(id) {
+        const { instruction, args } = decodedInstruction;
+        switch(instruction.id) {
             case 'CLR':
                 break;
             case 'RET': {
+                // Assumes that required address is at current stack pointer
                 this.PC = this.stack[this.SP];
-                this.SP++;
+                this.SP--;
                 break;
             };
             case 'JP_ADDR': {
                 this.stack.set([this.PC], this.SP);
-                this.SP--;
-                this.PC = args[0];
+                this.SP++;
+                this.PC = (args[0] - 0x001); // Decrementing to offset increment after switch
                 break;
             };
             case 'CALL_ADDR': {
                 this.stack.set([this.PC], this.SP);
-                // Add execute call
+                this.SP++;
+                this.PC = args[0];
+                // Add an execute call
                 break;
             };
             case 'SE_VX_NN': {
@@ -87,13 +90,13 @@ class CPU {
             case 'STO_NN_VX': {
                 const targetRegister = args[0];
                 const targetValue = args[1];
-                this.registers.set(targetValue, targetRegister);
+                this.registers.set([targetValue], targetRegister);
                 break;
             };
             case 'ADD_NN_VX': {
                 const targetRegister = args[0];
                 const targetValue = args[1];
-                this.registers.set((targetValue + this.registers[targetRegister], targetRegister));
+                this.registers.set([targetValue + this.registers[targetRegister]], targetRegister);
                 break;
             };
             case 'STO_VY_VX': {
@@ -204,7 +207,8 @@ class CPU {
             case 'LD_MEM': {
                 break;
             };
-        }
+        };
+        this.PC++;
     };
 };
 

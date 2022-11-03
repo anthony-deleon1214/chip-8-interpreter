@@ -111,21 +111,27 @@ class CPU {
                 break;
             }; 
             case 'VX_AND_VY': {
-                const result = (this.registers[args[0]] | this.registers[args[1]]);
-                this.registers.set([result], this.registers[args[0]]);
+                const result = (this.registers[args[0]] & this.registers[args[1]]);
+                this.registers[args[0]] = result;
                 break;
             };    
             case 'VX_XOR_VY': {
                 const result = (this.registers[args[0]] ^ this.registers[args[1]]);
-                this.registers.set([result], this.registers[args[0]]);
+                this.registers[args[0]] = result;
                 break;
             };
             case 'ADD_VY_VX': {
-                this.registers.set([(this.registers[args[0]] + this.registers[args[1]])], this.registers[args[0]]);
+                const vxRegister = this.registers[args[0]];
+                const vyRegister = this.registers[args[1]];
+                let newValue = vxRegister + vyRegister;
+                this.registers[args[0]] = newValue;
                 break;
             };
             case 'SUB_VY_VX': {
-                this.registers.set([(this.registers[args[0]] - this.registers[args[1]])], this.registers[args[0]]);
+                const vxRegister = this.registers[args[0]];
+                const vyRegister = this.registers[args[1]];
+                let newValue = vxRegister - vyRegister;
+                this.registers[args[0]] = newValue;
                 break;
             };
             case 'SHR_VY_VX': {

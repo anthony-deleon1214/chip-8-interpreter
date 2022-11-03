@@ -56,3 +56,56 @@ test('ADD_NN_VX', () => {
     testCPU._execute(instruction);
     expect(testCPU.registers[1]).toEqual(0xC8);
 });
+
+test('STO_VY_VX', () => {
+    const testCPU = new CPU;
+    const instruction = disassemble(0x8AB0);
+    testCPU.registers[0xB] = 0x3D;
+    testCPU._execute(instruction);
+    expect(testCPU.registers[0xA]).toEqual(0x3D);
+});
+
+test('VX_OR_VY', () => {
+    const testCPU = new CPU;
+    const instruction = disassemble(0x8121);
+    testCPU.registers[1] = 0x4A;
+    testCPU.registers[2] = 0x37;
+    testCPU._execute(instruction);
+    expect(testCPU.registers[1]).toEqual(0x7F);
+});
+
+test('VX_AND_VY', () => {
+    const testCPU = new CPU;
+    const instruction = disassemble(0x8342);
+    testCPU.registers[3] = 0x4A;
+    testCPU.registers[4] = 0x37;
+    testCPU._execute(instruction);
+    expect(testCPU.registers[3]).toEqual(0x2);
+});
+
+test('VX_XOR_VY', () => {
+    const testCPU = new CPU;
+    const instruction = disassemble(0x8563);
+    testCPU.registers[5] = 0x4A;
+    testCPU.registers[6] = 0x37;
+    testCPU._execute(instruction);
+    expect(testCPU.registers[5]).toEqual(0x7D);
+});
+
+test('ADD_VY_VX', () => {
+    const testCPU = new CPU;
+    const instruction = disassemble(0x8014);
+    testCPU.registers[0] = 0x4B;
+    testCPU.registers[1] = 0x32;
+    testCPU._execute(instruction);
+    expect(testCPU.registers[0]).toEqual(0x7D);
+});
+
+test('SUB_VY_VX', () => {
+    const testCPU = new CPU;
+    const instruction = disassemble(0x8235);
+    testCPU.registers[2] = 0xA5;
+    testCPU.registers[3] = 0x42;
+    testCPU._execute(instruction);
+    expect(testCPU.registers[2]).toEqual(0x63);
+});

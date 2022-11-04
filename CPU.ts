@@ -145,6 +145,7 @@ class CPU {
                 const VX = this.registers[args[0]];
                 const VY = this.registers[args[1]];
                 let newVX = VY-VX
+                this.registers.set([newVX], args[0]);
                 // Need to figure out checking for borrow
                 break;
             };

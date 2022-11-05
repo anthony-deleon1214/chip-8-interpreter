@@ -136,3 +136,26 @@ test('SHL_VY_VX', () => {
     expect(testCPU.registers[0]).toEqual(0x4A);
 });
 
+test('SNE_VX_VY', () => {
+    const testCPU = new CPU;
+    const instruction = disassemble(0x9120);
+    testCPU.registers[1] = 0xB3;
+    testCPU.registers[2] = 0xA3;
+    testCPU._execute(instruction);
+    expect(testCPU.PC).toEqual(0x202);
+});
+
+test('STO_NNN_I', () => {
+    const testCPU = new CPU;
+    const instruction = disassemble(0xA3B7);
+    testCPU._execute(instruction);
+    expect(testCPU.I).toEqual(0x3B7);
+});
+
+test('JMP_V0', () => {
+    const testCPU = new CPU;
+    const instruction = disassemble(0xB48A);
+    testCPU.registers[0] = 0x6;
+    testCPU._execute(instruction);
+    expect(testCPU.PC).toEqual(0x491);
+});

@@ -159,3 +159,37 @@ test('JMP_V0', () => {
     testCPU._execute(instruction);
     expect(testCPU.PC).toEqual(0x491);
 });
+
+test('RND_VX_NN', () => {
+
+});
+
+// No test for draw function
+
+test('SKP_VX', () => {
+
+});
+
+test('SKNP_VX', () => {
+
+});
+
+test('STO_VX_DT', () => {
+    const testCPU = new CPU;
+    const instruction = disassemble(0xF307);
+    testCPU.DT = 0x8A;
+    testCPU._execute(instruction);
+    expect(testCPU.registers[3]).toEqual(0x8A);
+});
+
+test('WAIT', () => {
+
+});
+
+test('SET_DT_VX', () => {
+    const testCPU = new CPU;
+    const instruction = disassemble(0xF415);
+    testCPU.registers[4] = 0x72;
+    testCPU._execute(instruction);
+    expect(testCPU.DT).toEqual(0x72);
+});

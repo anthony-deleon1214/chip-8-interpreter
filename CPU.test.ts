@@ -193,3 +193,20 @@ test('SET_DT_VX', () => {
     testCPU._execute(instruction);
     expect(testCPU.DT).toEqual(0x72);
 });
+
+test('SET_ST_VX', () => {
+    const testCPU = new CPU;
+    const instruction = disassemble(0xFA18);
+    testCPU.registers[0xA] = 0x63;
+    testCPU._execute(instruction);
+    expect(testCPU.ST).toEqual(0x63);
+});
+
+test('ADD_VX_I', () => {
+    const testCPU = new CPU;
+    const instruction = disassemble(0xF61E);
+    testCPU.registers[6] = 0x7A;
+    testCPU.I = 0x13;
+    testCPU._execute(instruction);
+    expect(testCPU.I).toEqual(0x8D);
+});

@@ -119,13 +119,13 @@ test('SHR_VY_VX', () => {
     expect(testCPU.registers[15]).toEqual(0x1);
 });
 
-test('SUBX_VX_VY', () => {
+test('SUBN_VX_VY', () => {
     const testCPU = new CPU;
-    const instruction = disassemble(0x8017);
-    testCPU.registers[0] = 0xA3;
-    testCPU.registers[1] = 0xD7;
+    const instruction = disassemble(0x8AB7);
+    testCPU.registers[0xA] = 0x2;
+    testCPU.registers[0xB] = 0x3;
     testCPU._execute(instruction);
-    expect(testCPU.registers[0]).toEqual(0x34);
+    expect(testCPU.registers[0xA]).toEqual(0x1);
 });
 
 test('SHL_VY_VX', () => {

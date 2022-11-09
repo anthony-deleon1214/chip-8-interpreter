@@ -141,9 +141,11 @@ class CPU {
                 this.registers.set([this.registers[args[1]] >> 1], this.registers[args[0]]);
                 break;
             };
-            case 'SUBX-VX_VY': {
-                this.registers.set([(this.registers[args[1]] - this.registers[args[0]])], args[0]);
-                // Need to figure out checking for borrow
+            case 'SUBN_VX_VY': {
+                const vxRegister = this.registers[args[0]];
+                const vyRegister = this.registers[args[1]];
+                let newValue = vyRegister - vxRegister;
+                this.registers[args[0]] = newValue;
                 break;
             };
             case 'SHL_VY_VX': {
@@ -163,9 +165,11 @@ class CPU {
             };
             case 'STO_NNN_I': {
                 this.I = args[0];
+                break;
             };
             case 'JMP_V0': {
                 this.PC = (this.registers[0] + args[0]);
+                break;
             };
             case 'RND_VX_NN': {
                 break;

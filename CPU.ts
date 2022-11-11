@@ -1,7 +1,9 @@
 // Importing disassembler function
 import disassemble from "./disassembler";
+import CpuInterface from "./CpuInterface";
 
 interface CPU {
+    interface: CpuInterface;
     memory: Uint8Array,
     registers: Uint8Array,
     stack: Uint16Array,
@@ -15,6 +17,7 @@ interface CPU {
 // Creating a CPU class
 class CPU {
     constructor() {
+        this.interface = CpuInterface;
         this.memory = new Uint8Array(4096);
         this.registers = new Uint8Array(16);
         this.stack = new Uint16Array(16);

@@ -28,5 +28,13 @@ class terminalInterface extends CpuInterface {
      */
     drawPixel(x, y, value) {
         this.frameBuffer[y][x] = value;
+
+        if (this.frameBuffer[y][x] === 1) {
+            this.screen.fillRegion(this.color, )
+        } else {
+            this.screen.clearRegion(x, x+1, y, y+1)
+        }
+
+        this.screen.render();
     };
 }

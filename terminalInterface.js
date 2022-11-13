@@ -1,9 +1,11 @@
 import CpuInterface from "./CpuInterface";
+import blessed from "blessed";
 
 class terminalInterface extends CpuInterface {
     constructor() {
         super()
         this.frameBuffer = this.createFrameBuffer();
+        this.screen = blessed.screen({ smartCSR: true });
     };
 
     createFrameBuffer() {

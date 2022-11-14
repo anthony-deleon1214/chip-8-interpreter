@@ -1,11 +1,19 @@
 import CpuInterface from "./CpuInterface";
 import blessed from "blessed";
+import keyMap from "./keyMap";
 
 class terminalInterface extends CpuInterface {
     constructor() {
         super()
         this.frameBuffer = this.createFrameBuffer();
         this.screen = blessed.screen({ smartCSR: true });
+
+        this.screen.on('keypress', (_, key) => {
+            const keyIndex = keyMap.indexOf(key.full);
+            if (keyIndex > -1) {
+                this._setKeys(keyIndex);
+            }
+        })
     };
 
     createFrameBuffer() {
@@ -37,4 +45,8 @@ class terminalInterface extends CpuInterface {
 
         this.screen.render();
     };
+
+    _setKeys() {
+
+    }
 }

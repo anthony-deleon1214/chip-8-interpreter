@@ -7,6 +7,7 @@ class terminalInterface extends CpuInterface {
         super()
         this.frameBuffer = this.createFrameBuffer();
         this.screen = blessed.screen({ smartCSR: true });
+        this.keys = 0b0000000000000000;
 
         this.screen.on('keypress', (_, key) => {
             const keyIndex = keyMap.indexOf(key.full);
@@ -46,7 +47,9 @@ class terminalInterface extends CpuInterface {
         this.screen.render();
     };
 
-    _setKeys() {
-
+    _setKeys(keyIndex) {
+        this.keys = keyIndex;
     }
-}
+};
+
+export default terminalInterface;

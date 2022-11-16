@@ -7,13 +7,22 @@ class terminalInterface extends CpuInterface {
         super()
         this.frameBuffer = this.createFrameBuffer();
         this.screen = blessed.screen({ smartCSR: true });
-        this.keys = 0b0000000000000000;
+        this.keys = 0;
+        this.keyPressed = undefined;
 
         this.screen.on('keypress', (_, key) => {
             const keyIndex = keyMap.indexOf(key.full);
             if (keyIndex > -1) {
                 this._setKeys(keyIndex);
             }
+        });
+
+        // Sound not implemented
+        this.soundEnabled = false;
+
+        // Defining an exit method
+        this.screen.key(['escape', 'C-c'], () => {
+            process.exit(0);
         })
     };
 
@@ -50,6 +59,13 @@ class terminalInterface extends CpuInterface {
     _setKeys(keyIndex) {
         this.keys = keyIndex;
     };
+
+    _waitKey() {
+        const keyPressed = this.keyPressed;
+        this.keyPressed = undefined;
+
+        return keyPressed;
+    }
 
     clearScreen() {
         this.frameBuffer = this.createFrameBuffer();

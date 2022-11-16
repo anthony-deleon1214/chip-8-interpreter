@@ -30,7 +30,13 @@ class CPU {
 
     // Reading ROM into buffer
 
-    
+    // Setting up a cycle function
+    cycle() {
+        this.step()
+
+        setTimeout(this.cycle, 3);
+    }
+
     // Laying out instruction cycle
     step() {
         const opcode = this._fetch();

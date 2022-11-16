@@ -49,7 +49,7 @@ class terminalInterface extends CpuInterface {
 
     _setKeys(keyIndex) {
         this.keys = keyIndex;
-    }
+    };
 };
 
 export default terminalInterface;

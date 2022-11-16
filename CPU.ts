@@ -58,6 +58,7 @@ class CPU {
         const { instruction, args } = decodedInstruction;
         switch(instruction.id) {
             case 'CLR':
+                this.interface.clearScreen();
                 break;
             case 'RET': {
                 // Assumes that required address is at current stack pointer
@@ -184,6 +185,7 @@ class CPU {
                 break;
             };
             case 'DRW_VX_VY_N': {
+                for (let i = 0; i < args)
                 break;
             };
             case 'SKP_VX': {

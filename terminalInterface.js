@@ -50,6 +50,12 @@ class terminalInterface extends CpuInterface {
     _setKeys(keyIndex) {
         this.keys = keyIndex;
     };
+
+    clearScreen() {
+        this.frameBuffer = this.createFrameBuffer();
+
+        this.screen.render();
+    };
 };
 
 export default terminalInterface;

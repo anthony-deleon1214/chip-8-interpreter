@@ -189,6 +189,7 @@ class CPU {
                 break;
             };
             case 'SKP_VX': {
+                if (this.registers[args[0]] === this.interface.keyPressed)
                 break;
             };
             case 'SKNP_VX': {
@@ -199,6 +200,7 @@ class CPU {
                 break;
             };
             case 'WAIT': {
+                this.interface._waitKey();
                 break;
             };
             case 'SET_DT_VX': {
@@ -220,7 +222,6 @@ class CPU {
                 break;
             };
             case 'LD_REG': {
-                
                 break;
             };
             case 'LD_MEM': {

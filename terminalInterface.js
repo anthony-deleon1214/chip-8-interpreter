@@ -65,7 +65,7 @@ class terminalInterface extends CpuInterface {
         this.keyPressed = undefined;
 
         return keyPressed;
-    }
+    };
 
     clearScreen() {
         this.frameBuffer = this.createFrameBuffer();

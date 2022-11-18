@@ -1,6 +1,6 @@
 // Importing disassembler function
-import disassemble from "./disassembler";
-import terminalInterface from './terminalInterface';
+import disassemble from "../disassembler";
+import terminalInterface from '../terminalInterface';
 
 interface CPU {
     interface: terminalInterface;
@@ -185,7 +185,9 @@ class CPU {
                 break;
             };
             case 'DRW_VX_VY_N': {
-                for (let i = 0; i < args)
+                for (let i = 0; i < args; i++) {
+
+                }
                 break;
             };
             case 'SKP_VX': {

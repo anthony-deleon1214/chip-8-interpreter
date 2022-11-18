@@ -1,4 +1,4 @@
-import CpuInterface from "./CpuInterface";
+import CpuInterface from "./classes/CpuInterface";
 import blessed from "blessed";
 import keyMap from "./keyMap";
 

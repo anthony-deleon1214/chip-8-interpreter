@@ -1,4 +1,4 @@
-import INSTRUCTION_SET from "./instructionSet";
+import INSTRUCTION_SET from "../instructionSet";
 
 function disassemble(opcode) {
     // Use bitmasks and patterns to match opcode to an instruction pattern

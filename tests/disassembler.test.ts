@@ -2,7 +2,7 @@
 
 import { expect, jest, test } from '@jest/globals';
 import disassemble from './disassembler';
-import INSTRUCTION_SET from './instructionSet';
+import INSTRUCTION_SET from '../instructionSet';
 
 test('Clear screen', () => {
     expect(disassemble(0x00E0)).toStrictEqual({ instruction: INSTRUCTION_SET[0], args: []});

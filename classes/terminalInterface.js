@@ -1,6 +1,6 @@
-import CpuInterface from "./classes/CpuInterface";
+import CpuInterface from "./CpuInterface";
 import blessed from "blessed";
-import keyMap from "./keyMap";
+import keyMap from "../keyMap";
 
 class terminalInterface extends CpuInterface {
     constructor() {

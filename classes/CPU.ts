@@ -182,11 +182,24 @@ class CPU {
                 break;
             };
             case 'RND_VX_NN': {
+                let randNumber = Math.floor(Math.random() * 0xFF); // Generate random integer
+                this.registers[args[0]] = randNumber & args[1];
                 break;
             };
             case 'DRW_VX_VY_N': {
-                for (let i = 0; i < args; i++) {
+                // Checking that memory will be in bounds
+                if (this.I > 4095 - args[2]) {
+                    throw new Error('Memory out of bounds');
+                };
+                
+                // 
+                for (let i = 0; i < args[2]; i++) {
+                    // Start getting data from memory at address I
+                    let line = this.memory[this.I + i];
 
+                    for (let position = 0; position < 8; position++) {
+                        let value = line & (1 << (7-position)) ? 1 : 0;
+                    }
                 }
                 break;
             };

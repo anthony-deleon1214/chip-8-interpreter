@@ -1,6 +1,6 @@
 // Importing disassembler function
-import disassemble from "../disassembler";
-import terminalInterface from '../terminalInterface';
+import disassemble from "../classes/disassembler";
+import terminalInterface from '../classes/terminalInterface';
 
 interface CPU {
     interface: terminalInterface;

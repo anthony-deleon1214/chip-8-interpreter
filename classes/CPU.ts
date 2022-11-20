@@ -79,7 +79,7 @@ class CPU {
             case 'JP_ADDR': {
                 this.stack.set([this.PC], this.SP);
                 this.SP++;
-                this.PC = (args[0] - 0x001); // Decrementing to offset increment after switch
+                this.PC = (args[0]);
                 break;
             };
             case 'CALL_ADDR': {
@@ -91,19 +91,19 @@ class CPU {
             };
             case 'SE_VX_NN': {
                 if (this.registers[args[0]] === args[1]) {
-                    this._nextInstruction;
+                    this._skipInstruction();
                 };
                 break;
             };
             case 'SNE_VX_NN': {
                 if (this.registers[args[0]] !== args[1]) {
-                    this._nextInstruction;
+                    this._skipInstruction();
                 };
                 break;
             };
             case 'SE_VX_VY': {
                 if (this.registers[args[0]] === this.registers[args[1]]) {
-                    this._nextInstruction;
+                    this._skipInstruction();
                 };
                 break;
             };
@@ -179,7 +179,7 @@ class CPU {
                 const vxRegister = this.registers[args[0]];
                 const vyRegister = this.registers[args[1]];
                 if (vxRegister !== vyRegister) {
-                    this.PC++
+                    this._skipInstruction();
                 };
                 break;
             };

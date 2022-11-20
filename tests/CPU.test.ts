@@ -142,7 +142,7 @@ test('SNE_VX_VY', () => {
     testCPU.registers[1] = 0xB3;
     testCPU.registers[2] = 0xA3;
     testCPU._execute(instruction);
-    expect(testCPU.PC).toEqual(0x202);
+    expect(testCPU.PC).toEqual(0x204);
 });
 
 test('STO_NNN_I', () => {
@@ -157,7 +157,7 @@ test('JMP_V0', () => {
     const instruction = disassemble(0xB48A);
     testCPU.registers[0] = 0x6;
     testCPU._execute(instruction);
-    expect(testCPU.PC).toEqual(0x491);
+    expect(testCPU.PC).toEqual(0x490);
 });
 
 test('RND_VX_NN', () => {

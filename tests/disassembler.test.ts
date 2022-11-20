@@ -1,8 +1,8 @@
 // Testing that disassembler properly return opcode object with args given 16-bit hex value
 
 import { expect, jest, test } from '@jest/globals';
-import disassemble from './disassembler';
-import INSTRUCTION_SET from '../instructionSet';
+import disassemble from '../classes/disassembler';
+import INSTRUCTION_SET from '../data/instructionSet';
 
 test('Clear screen', () => {
     expect(disassemble(0x00E0)).toStrictEqual({ instruction: INSTRUCTION_SET[0], args: []});

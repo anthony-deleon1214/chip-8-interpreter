@@ -53,6 +53,16 @@ class CPU {
         return disassemble(opcode);
     };
 
+    _nextInstruction() {
+        // Move PC forward two bytes to next opcode
+        this.PC = this.PC + 2
+    };
+
+    _skipInstruction() {
+        // Move PC forward four bytes to skip next opcode
+        this.PC = this.PC + 4
+    };
+
     _execute(decodedInstruction) {
         // Destructure the object into id and arguments
         const { instruction, args } = decodedInstruction;
@@ -81,19 +91,19 @@ class CPU {
             };
             case 'SE_VX_NN': {
                 if (this.registers[args[0]] === args[1]) {
-                    this.PC++;
+                    this._nextInstruction;
                 };
                 break;
             };
             case 'SNE_VX_NN': {
                 if (this.registers[args[0]] !== args[1]) {
-                    this.PC++;
+                    this._nextInstruction;
                 };
                 break;
             };
             case 'SE_VX_VY': {
                 if (this.registers[args[0]] === this.registers[args[1]]) {
-                    this.PC++;
+                    this._nextInstruction;
                 };
                 break;
             };
@@ -243,7 +253,6 @@ class CPU {
                 break;
             };
         };
-        this.PC++;
     };
 };
 

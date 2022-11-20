@@ -1,7 +1,7 @@
 import { expect, jest, test } from '@jest/globals';
-import CPU from './CPU';
-import disassemble from './disassembler';
-import INSTRUCTION_SET from '../instructionSet';
+import CPU from '../classes/CPU';
+import disassemble from '../classes/disassembler';
+import INSTRUCTION_SET from '../data/instructionSet';
 
 test('JP_ADDR', () => {
     const testCPU = new CPU;
@@ -22,7 +22,7 @@ test('SE_VX_NN', () => {
     const instruction = disassemble(0x3ABC);
     testCPU.registers[0xA] = 0xBC;
     testCPU._execute(instruction);
-    expect(testCPU.PC).toEqual(0x202);
+    expect(testCPU.PC).toEqual(0x204);
 });
 
 test('SNE_VX_NN', () => {
@@ -30,7 +30,7 @@ test('SNE_VX_NN', () => {
     const instruction = disassemble(0x4ABC);
     testCPU.registers[0xA] = 0xCD;
     testCPU._execute(instruction);
-    expect(testCPU.PC).toEqual(0x202);
+    expect(testCPU.PC).toEqual(0x204);
 });
 
 test('SE_VX_VY', () => {
@@ -39,7 +39,7 @@ test('SE_VX_VY', () => {
     testCPU.registers[0] = 0xAB;
     testCPU.registers[7] = 0xAB;
     testCPU._execute(instruction);
-    expect(testCPU.PC).toEqual(0x202);
+    expect(testCPU.PC).toEqual(0x204);
 });
 
 test('STO_NN_VX', () => {

@@ -1,6 +1,8 @@
 // Importing disassembler function
 import disassemble from "../classes/disassembler";
 import terminalInterface from '../classes/terminalInterface';
+import RomBuffer from './RomBuffer';
+import fontSet from '../data/fontSet';
 
 interface CPU {
     interface: terminalInterface;
@@ -12,12 +14,20 @@ interface CPU {
     I: number,
     DT: number,
     ST: number,
+    halted: boolean,
 };
 
 // Creating a CPU class
 class CPU {
-    constructor() {
-        this.interface = new terminalInterface;
+    // Take cpuInterface as constructor arg
+    constructor(cpuInterface) {
+        this.interface = new cpuInterface;
+
+        this.reset()
+    }
+
+    // Setting base values for the CPU
+    reset() {
         this.memory = new Uint8Array(4096);
         this.registers = new Uint8Array(16);
         this.stack = new Uint16Array(16);
@@ -26,9 +36,34 @@ class CPU {
         this.I = 0;         // Index register
         this.DT = 0;        // Delay timer
         this.ST = 0;        // Sound timer
+        this.halted = true;
     };
 
     // Reading ROM into buffer
+    load(romBuffer) {
+        // Reset values to initial values when ROM is loaded
+        this.reset()
+
+        // Loading font data into memory
+        for (let i = 0; i < fontSet.length; i++) {
+            this.memory[i] = fontSet[i]
+        }
+
+        // Get romData from romBuffer
+        const romData = romBuffer.data;
+        let memoryStart = 0x200;
+
+        this.halted = false;
+
+        // Place romData into memory
+        for (let i = 0; i < romData.length; i++) {
+            // Loading the most significant bit into memory
+            this.memory[memoryStart + 2 * i] = romData[i] >> 8;
+
+            // Loading least significant bit into memory
+            this.memory[memoryStart + 2 * i + 1] = romData[i] & 0x00FF;
+        }
+    };
 
     // Setting up a cycle function
     cycle() {

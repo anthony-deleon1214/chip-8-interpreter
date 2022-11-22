@@ -45,6 +45,8 @@ class terminalInterface extends CpuInterface {
      * Updates a single pixel value in the frameBuffer
      */
     drawPixel(x, y, value) {
+        // Checking for collision at specified coordinate, returning true if there is a collision
+        let collision = this.frameBuffer[y][x] & value;
         this.frameBuffer[y][x] = value;
 
         if (this.frameBuffer[y][x] === 1) {
@@ -54,7 +56,13 @@ class terminalInterface extends CpuInterface {
         }
 
         this.screen.render();
+
+        return collision;
     };
+
+    _getKeys() {
+        return this.keys;
+    }
 
     _setKeys(keyIndex) {
         this.keys = keyIndex;

@@ -104,6 +104,7 @@ class CPU {
         switch(instruction.id) {
             case 'CLR':
                 this.interface.clearScreen();
+                this._nextInstruction();
                 break;
             case 'RET': {
                 // Assumes that required address is at current stack pointer
@@ -112,33 +113,38 @@ class CPU {
                 break;
             };
             case 'JP_ADDR': {
-                this.stack.set([this.PC], this.SP);
-                this.SP++;
+                // Does not store address before jump
                 this.PC = (args[0]);
                 break;
             };
             case 'CALL_ADDR': {
+                // Pushing current address to stack
                 this.stack.set([this.PC], this.SP);
                 this.SP++;
                 this.PC = args[0];
-                // Add an execute call
                 break;
             };
             case 'SE_VX_NN': {
                 if (this.registers[args[0]] === args[1]) {
                     this._skipInstruction();
+                } else {
+                    this._nextInstruction();
                 };
                 break;
             };
             case 'SNE_VX_NN': {
                 if (this.registers[args[0]] !== args[1]) {
                     this._skipInstruction();
+                } else {
+                    this._nextInstruction();
                 };
                 break;
             };
             case 'SE_VX_VY': {
                 if (this.registers[args[0]] === this.registers[args[1]]) {
                     this._skipInstruction();
+                } else {
+                    this._nextInstruction();
                 };
                 break;
             };
@@ -240,19 +246,41 @@ class CPU {
                 // 
                 for (let i = 0; i < args[2]; i++) {
                     // Start getting data from memory at address I
+                    // New line for each value of i
                     let line = this.memory[this.I + i];
 
                     for (let position = 0; position < 8; position++) {
+                        // Iterate through each position in a line
+                        // Checking value at each position using bitwise AND
                         let value = line & (1 << (7-position)) ? 1 : 0;
+                        // Using modulo to ensure wrapping
+                        let x = (this.registers[args[0]] + position) % 64;
+                        let y = (this.registers[args[1]] + i) % 32;
+
+                        if (this.interface.drawPixel(x, y, value)) {
+                            // Setting VF register if a collision occurs when drawing pixels
+                            this.registers[0xF] = 1;
+                        };
                     }
                 }
                 break;
             };
             case 'SKP_VX': {
-                if (this.registers[args[0]] === this.interface.keyPressed)
+                // Bitshifting 1 left by the value in the VX register
+                if ((1 << this.registers[args[0]]) === this.interface._getKeys()) {
+                    this._skipInstruction();
+                } else {
+                    this._nextInstruction();
+                };
                 break;
             };
             case 'SKNP_VX': {
+                // Bitshifting 1 left by the value in the VX register
+                if (!((1 << this.registers[args[0]]) === this.interface._getKeys())) {
+                    this._skipInstruction();
+                } else {
+                    this._nextInstruction();
+                };
                 break;
             };
             case 'STO_VX_DT': {
@@ -276,15 +304,40 @@ class CPU {
                 break;
             };
             case 'SET_I_VX': {
+                // Set I register to the location of the sprite data corresponding to the value at the VX register
+                
                 break;
             };
             case 'STO_VX_I': {
+                // Store binary-coded decimal of value at VX in memory at addresses I, I+1, and I+2
+                let x = this.registers[args[0]];
+                const a = Math.floor(x/100);
+                x = x - a * 100;
+                const b = Math.floor(x/10);
+                x = x - b * 10;
+                const c = Math.floor(x)
+
+                this.memory[this.I] = a;
+                this.memory[this.I + 1] = b;
+                this.memory[this.I + 2] = c;
+
+                this._nextInstruction();
                 break;
             };
             case 'LD_REG': {
+                // Iterate through registers up to VX and store values in memory starting at this.I
+                for (let i = 0; i <= args[0]; i++) {
+                    this.memory[this.I + i] = this.registers[i]
+                };
+                this._nextInstruction();
                 break;
             };
             case 'LD_MEM': {
+                // Iterate through memory starting at address I and store values at registers up to VX
+                for (let i = 0; i <= args[0]; i++) {
+                    this.registers[i] = this.memory[this.I + i] 
+                };
+                this._nextInstruction();
                 break;
             };
         };

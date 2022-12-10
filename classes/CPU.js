@@ -1,10 +1,10 @@
 // Importing disassembler function
-import disassemble from "../classes/disassembler";
-import terminalInterface from '../classes/terminalInterface';
-import RomBuffer from './RomBuffer';
-import fontSet from '../data/fontSet';
+import disassemble from "./disassembler.js";
+import terminalInterface from './terminalInterface.js';
+import RomBuffer from './RomBuffer.js';
+import fontSet from '../data/fontSet.js';
 
-interface CPU {
+/*interface CPU {
     interface: terminalInterface;
     memory: Uint8Array,
     registers: Uint8Array,
@@ -15,13 +15,13 @@ interface CPU {
     DT: number,
     ST: number,
     halted: boolean,
-};
+}; */
 
 // Creating a CPU class
 class CPU {
     // Take cpuInterface as constructor arg
     constructor(cpuInterface) {
-        this.interface = new cpuInterface;
+        this.interface = cpuInterface;
 
         this.reset()
     }

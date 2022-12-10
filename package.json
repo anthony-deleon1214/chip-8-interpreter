@@ -1,6 +1,8 @@
 {
+  "type": "module",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "play:terminal": "node scripts/terminal"
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",

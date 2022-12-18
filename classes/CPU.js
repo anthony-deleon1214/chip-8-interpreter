@@ -344,7 +344,7 @@ class CPU {
             };
             case 'SET_I_VX': {
                 // Set I register to the location of the sprite data corresponding to the value at the VX register
-                this.I = this.registers[args[0]];
+                this.I = this.registers[args[0]] * 5;
                 this._nextInstruction();
                 break;
             };

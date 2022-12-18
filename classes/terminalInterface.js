@@ -1,21 +1,30 @@
 import CpuInterface from "./CpuInterface.js";
 import blessed from "blessed";
 import keyMap from "../data/keyMap.js";
+import { COLOR, DISPLAY_HEIGHT, DISPLAY_WIDTH } from "../data/constants.js";
 
 class terminalInterface extends CpuInterface {
     constructor() {
         super()
         this.frameBuffer = this.createFrameBuffer();
         this.screen = blessed.screen({ smartCSR: true });
+        this.screen.title = 'Chip8.js';
+        this.color = blessed.helpers.attrToBinary({ fg: COLOR });
         this.keys = 0;
         this.keyPressed = undefined;
 
+        // Key Down Event
         this.screen.on('keypress', (_, key) => {
             const keyIndex = keyMap.indexOf(key.full);
             if (keyIndex > -1) {
                 this._setKeys(keyIndex);
             }
         });
+
+        // Emulating a key up event
+        setInterval(() => {
+            this._resetKeys()
+        }, 100)
 
         // Sound not implemented
         this.soundEnabled = false;
@@ -29,9 +38,9 @@ class terminalInterface extends CpuInterface {
     createFrameBuffer() {
         let frameBuffer = [];               // Initialize frameBuffer
 
-        for (let i = 0; i < 32; i++) {      // Create arrays for each column
+        for (let i = 0; i < DISPLAY_WIDTH; i++) {      // Create arrays for each column
             frameBuffer.push([]);
-            for (let j = 0; j < 64; j++) {  // Place zeroes in frameBuffer arrays to represent rows
+            for (let j = 0; j < DISPLAY_HEIGHT; j++) {  // Place zeroes in frameBuffer arrays to represent rows
                 frameBuffer[i].push(0);
             }
         }
@@ -47,10 +56,10 @@ class terminalInterface extends CpuInterface {
     drawPixel(x, y, value) {
         // Checking for collision at specified coordinate, returning true if there is a collision
         let collision = this.frameBuffer[y][x] & value;
-        this.frameBuffer[y][x] = value;
+        this.frameBuffer[y][x] ^= value;
 
         if (this.frameBuffer[y][x] === 1) {
-            this.screen.fillRegion(this.color, )
+            this.screen.fillRegion(this.color, '█', x, x + 1, y, y + 1)
         } else {
             this.screen.clearRegion(x, x+1, y, y+1)
         }
@@ -65,7 +74,9 @@ class terminalInterface extends CpuInterface {
     }
 
     _setKeys(keyIndex) {
-        this.keys = keyIndex;
+        let keyMask = 1 << keyIndex;
+        this.keys = this.keys | keyMask;
+        this.keyPressed = keyIndex;
     };
 
     _waitKey() {
@@ -75,10 +86,15 @@ class terminalInterface extends CpuInterface {
         return keyPressed;
     };
 
+    _resetKeys() {
+        this.keys = 0;
+        this.keyPressed = undefined;
+    };
+
     clearScreen() {
         this.frameBuffer = this.createFrameBuffer();
-
-        this.screen.render();
+        this.screen.clearRegion(0, DISPLAY_WIDTH, 0, DISPLAY_HEIGHT)
+        //this.screen.render();
     };
 };
 

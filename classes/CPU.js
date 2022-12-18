@@ -3,6 +3,7 @@ import disassemble from "./disassembler.js";
 import terminalInterface from './terminalInterface.js';
 import RomBuffer from './RomBuffer.js';
 import fontSet from '../data/fontSet.js';
+import { DISPLAY_HEIGHT, DISPLAY_WIDTH } from "../data/constants.js";
 
 /*interface CPU {
     interface: terminalInterface;
@@ -37,6 +38,7 @@ class CPU {
         this.DT = 0;        // Delay timer
         this.ST = 0;        // Sound timer
         this.halted = true;
+        this.soundEnabled = false;
     };
 
     // Reading ROM into buffer
@@ -72,16 +74,32 @@ class CPU {
         setTimeout(this.cycle, 3);
     }
 
+    // Defining a tick function
+    tick() {
+        if (this.DT > 0) {
+            this.DT--
+        };
+
+        if (this.ST > 0) {
+            this.ST--
+        } else {
+            if (this.soundEnabled) {
+                this.interface.disableSound();
+                this.soundEnabled = false;
+            };
+        };
+    };
+
     // Laying out instruction cycle
     step() {
         const opcode = this._fetch();
         const instruction = this._decode(opcode);
 
         this._execute(instruction);
-    }
+    };
 
     _fetch() {
-        return this.memory[this.PC];
+        return (this.memory[this.PC] << 8) | (this.memory[this.PC + 1] << 0)
     };
 
     _decode(opcode) {
@@ -119,8 +137,8 @@ class CPU {
             };
             case 'CALL_ADDR': {
                 // Pushing current address to stack
-                this.stack.set([this.PC], this.SP);
                 this.SP++;
+                this.stack[this.SP] = this.PC + 2
                 this.PC = args[0];
                 break;
             };
@@ -152,33 +170,39 @@ class CPU {
                 const targetRegister = args[0];
                 const targetValue = args[1];
                 this.registers.set([targetValue], targetRegister);
+                this._nextInstruction();
                 break;
             };
             case 'ADD_NN_VX': {
                 const targetRegister = args[0];
                 const targetValue = args[1];
                 this.registers.set([targetValue + this.registers[targetRegister]], targetRegister);
+                this._nextInstruction();
                 break;
             };
             case 'STO_VY_VX': {
                 const vxRegister = args[0];
                 const vyRegisterValue = this.registers[args[1]];
                 this.registers.set([vyRegisterValue], vxRegister);
+                this._nextInstruction();
                 break;
             };
             case 'VX_OR_VY': {
                 const result = (this.registers[args[0]] | this.registers[args[1]]);
                 this.registers.set([result], args[0]);
+                this._nextInstruction();
                 break;
             }; 
             case 'VX_AND_VY': {
                 const result = (this.registers[args[0]] & this.registers[args[1]]);
                 this.registers[args[0]] = result;
+                this._nextInstruction();
                 break;
             };    
             case 'VX_XOR_VY': {
                 const result = (this.registers[args[0]] ^ this.registers[args[1]]);
                 this.registers[args[0]] = result;
+                this._nextInstruction();
                 break;
             };
             case 'ADD_VY_VX': {
@@ -186,6 +210,7 @@ class CPU {
                 const vyRegister = this.registers[args[1]];
                 let newValue = vxRegister + vyRegister;
                 this.registers[args[0]] = newValue;
+                this._nextInstruction();
                 break;
             };
             case 'SUB_VY_VX': {
@@ -193,6 +218,7 @@ class CPU {
                 const vyRegister = this.registers[args[1]];
                 let newValue = vxRegister - vyRegister;
                 this.registers[args[0]] = newValue;
+                this._nextInstruction();
                 break;
             };
             case 'SHR_VY_VX': {
@@ -200,6 +226,7 @@ class CPU {
                 const LSB = this.registers[args[1]] & lsbMask;
                 this.registers.set([LSB], 0xF);
                 this.registers.set([this.registers[args[1]] >> 1], this.registers[args[0]]);
+                this._nextInstruction();
                 break;
             };
             case 'SUBN_VX_VY': {
@@ -207,6 +234,7 @@ class CPU {
                 const vyRegister = this.registers[args[1]];
                 let newValue = vyRegister - vxRegister;
                 this.registers[args[0]] = newValue;
+                this._nextInstruction();
                 break;
             };
             case 'SHL_VY_VX': {
@@ -215,6 +243,7 @@ class CPU {
                 this.registers.set([MSB], 0xF);
                 this.registers.set([this.registers[args[1]] << 1], this.registers[args[0]]);
             };
+                this._nextInstruction();
                 break;
             case 'SNE_VX_VY': {
                 const vxRegister = this.registers[args[0]];
@@ -222,10 +251,12 @@ class CPU {
                 if (vxRegister !== vyRegister) {
                     this._skipInstruction();
                 };
+                this._nextInstruction();
                 break;
             };
             case 'STO_NNN_I': {
                 this.I = args[0];
+                this._nextInstruction();
                 break;
             };
             case 'JMP_V0': {
@@ -235,6 +266,7 @@ class CPU {
             case 'RND_VX_NN': {
                 let randNumber = Math.floor(Math.random() * 0xFF); // Generate random integer
                 this.registers[args[0]] = randNumber & args[1];
+                this._nextInstruction();
                 break;
             };
             case 'DRW_VX_VY_N': {
@@ -243,6 +275,8 @@ class CPU {
                     throw new Error('Memory out of bounds');
                 };
                 
+                this.registers[0xF] = 0;
+
                 // 
                 for (let i = 0; i < args[2]; i++) {
                     // Start getting data from memory at address I
@@ -254,8 +288,8 @@ class CPU {
                         // Checking value at each position using bitwise AND
                         let value = line & (1 << (7-position)) ? 1 : 0;
                         // Using modulo to ensure wrapping
-                        let x = (this.registers[args[0]] + position) % 64;
-                        let y = (this.registers[args[1]] + i) % 32;
+                        let x = (this.registers[args[0]] + position) % DISPLAY_WIDTH;
+                        let y = (this.registers[args[1]] + i) % DISPLAY_HEIGHT;
 
                         if (this.interface.drawPixel(x, y, value)) {
                             // Setting VF register if a collision occurs when drawing pixels
@@ -263,6 +297,7 @@ class CPU {
                         };
                     }
                 }
+                this._nextInstruction();
                 break;
             };
             case 'SKP_VX': {
@@ -285,6 +320,7 @@ class CPU {
             };
             case 'STO_VX_DT': {
                 this.registers.set([this.DT], args[0]);
+                this._nextInstruction();
                 break;
             };
             case 'WAIT': {
@@ -293,14 +329,17 @@ class CPU {
             };
             case 'SET_DT_VX': {
                 this.DT = this.registers[args[0]];
+                this._nextInstruction();
                 break;
             };
             case 'SET_ST_VX': {
                 this.ST = this.registers[args[0]];
+                this._nextInstruction();
                 break;
             };
             case 'ADD_VX_I': {
                 this.I = (this.I + this.registers[args[0]]);
+                this._nextInstruction();
                 break;
             };
             case 'SET_I_VX': {
